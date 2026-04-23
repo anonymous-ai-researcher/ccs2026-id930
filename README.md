@@ -206,15 +206,3 @@ Optional (for embedding generation):
 ## License
 
 This code is released for academic research under the MIT License.
-
-## Citation
-
-```bibtex
-@inproceedings{anonymous2026price,
-  title={The Price of Geometry: Minimax Optimal Privacy for Similarity
-         Search over Access-Controlled Vector Databases},
-  author={Anonymous},
-  booktitle={ACM CCS},
-  year={2026}
-}
-```
