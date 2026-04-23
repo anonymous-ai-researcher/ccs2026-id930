@@ -1,0 +1,50 @@
+# Default configuration for CPFG experiments
+# Override via command-line arguments
+
+privacy:
+  epsilon: 1.0
+  delta: 1.0e-6
+  k: 10
+
+mechanism:
+  budget_split: "optimal"     # "optimal" or [eps_s, eps_d]
+  sensitivity: "worst_case"   # "worst_case" (CPFG) or "smooth" (CPFG*)
+  smooth_beta_factor: 0.5     # beta = epsilon_d / (2 * ln(2/delta))
+
+evaluation:
+  n_queries: 1000
+  n_attack_runs: 5
+  n_positive: 1000            # Positive queries (restricted vectors nearby)
+  n_negative: 1000            # Negative queries (no restricted vectors nearby)
+  seed: 42
+
+index:
+  type: "hnsw"
+  ef_construction: 200
+  M: 32
+  ef_search: 100
+
+datasets:
+  mimiciv:
+    n_vectors: 331000
+    dimension: 768
+    alpha: 0.31
+    ac_type: "real"
+    embedding_model: "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract"
+  legalbench:
+    n_vectors: 25000
+    dimension: 1024
+    alpha: 0.24
+    ac_type: "real"
+    embedding_model: "intfloat/e5-large-v2"
+  msmarco:
+    n_vectors: 8800000
+    dimension: 768
+    alpha: 0.20
+    ac_type: "synthetic"
+    embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
+  glove:
+    n_vectors: 1200000
+    dimension: 200
+    alpha: 0.20
+    ac_type: "synthetic"
