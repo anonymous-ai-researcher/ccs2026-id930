@@ -8,7 +8,7 @@ This repository contains the implementation and experimental evaluation for the 
 
 **Key contributions:**
 - Three leakage channels (distance skew, angular gap, triangulation) that exploit the geometry of filtered query results
-- Tight minimax lower bounds for the hybrid discrete-continuous output space via fingerprinting codes
+- Tight minimax lower bounds for the hybrid discrete-continuous output space via Le Cam detection and the Hardt-Talwar ℓ₂ minimax theorem
 - CPFG, a matching mechanism coupling permute-and-flip (set selection) with calibrated Gaussian noise (distance perturbation)
 - CPFG\*, an instance-optimal variant using smooth sensitivity of ordered $k$-NN statistics
 - Composition bounds with shuffling amplification
@@ -21,14 +21,14 @@ cpfg-mechanism/
 │   ├── mechanism.py         # CPFG and CPFG* (Algorithm 1)
 │   ├── pf.py                # Permute-and-flip (Definition 3)
 │   ├── gaussian.py          # Gaussian noise calibration
-│   ├── budget_split.py      # Optimal budget split (Eq. 4)
-│   └── sensitivity.py       # Sensitivity computation (Lemma 3.1 + smooth)
+│   ├── budget_split.py      # Optimal budget split (Eq. 1)
+│   └── sensitivity.py       # Sensitivity computation (Lemma 1 + Lemma 3 smooth)
 ├── attacks/                 # Leakage channel implementations
 │   ├── channel1.py          # KS test on distance distributions
 │   ├── channel2.py          # Rayleigh test on angular gaps
 │   ├── channel3.py          # MLE triangulation
 │   └── evaluate.py          # AUC evaluation framework
-├── baselines/               # B0-B5 baseline mechanisms
+├── baselines/               # B1-B5 baseline mechanisms (B0 = no defense; B6-B7 in cpfg/)
 │   ├── gumbel_topk.py       # B1: Gumbel top-k
 │   ├── joint_exp.py         # B2: Joint exponential mechanism
 │   ├── pf_only.py           # B3: PF-only (no distance noise)
@@ -49,7 +49,7 @@ cpfg-mechanism/
 ├── data/
 │   └── preprocess.py        # Dataset preprocessing scripts
 ├── scripts/
-│   ├── verify_sensitivity.py    # Machine-checked Lemma 3.1
+│   ├── verify_sensitivity.py    # Machine-checked Lemma 1 (ℓ₂ sensitivity)
 │   └── generate_tables.py       # LaTeX table generation
 ├── configs/
 │   └── default.yaml         # Default experiment configuration
@@ -150,13 +150,13 @@ python experiments/exp2_channel_closure.py \
 
 ## Verification Scripts
 
-Machine-checked verification of key theoretical results:
+Machine-checked verification of key sensitivity bounds:
 
 ```bash
-# Verify Lemma 3.1 (ℓ₂ sensitivity bound)
+# Verify Lemma 1 (ℓ₂ sensitivity bound)
 python scripts/verify_sensitivity.py
 
-# Verify smooth sensitivity computation (Lemma E.1)
+# Verify smooth sensitivity computation (Lemma 3)
 python scripts/verify_sensitivity.py --smooth
 ```
 
@@ -173,7 +173,7 @@ privacy:
 mechanism:
   budget_split: "optimal"    # or fixed ratio
   sensitivity: "worst_case"  # or "smooth" for CPFG*
-  smooth_beta_factor: 0.5    # beta = epsilon_d / (2 * ln(2/delta))
+  smooth_beta_factor: 0.25   # beta = epsilon_d / (4 * k * ln(2/delta))
 
 evaluation:
   n_queries: 1000
